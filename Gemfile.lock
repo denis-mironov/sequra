@@ -309,7 +309,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (~> 7.1.2)
   rspec-rails (~> 5.0.0)
-  rubocop (>= 0.77.0)
+  rubocop
   rubocop-rails
   rubocop-rake
   rubocop-rspec
