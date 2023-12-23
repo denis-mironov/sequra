@@ -4,3 +4,7 @@ Style/Documentation:
     - 'app/mailers/application_mailer.rb'
     - 'app/models/application_record.rb'
     - 'config/application.rb'
+
+Style/NumericLiterals:
+  Exclude:
+    - 'db/schema.rb'
