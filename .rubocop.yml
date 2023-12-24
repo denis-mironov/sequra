@@ -15,6 +15,7 @@ AllCops:
     - 'tmp/**/*'
     - 'vendor/**/*'
     - '.git/**/*'
+    - 'db/schema.rb'
 
 Metrics/ClassLength:
   Max: 150
