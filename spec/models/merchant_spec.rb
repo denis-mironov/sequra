@@ -85,6 +85,14 @@ RSpec.describe Merchant do
         include_examples 'returns validation error', ActiveModel::StrictValidationFailed
       end
 
+      context 'when reference is not unique' do
+        let(:existing_merchant) { create(:merchant) }
+        let(:reference) { existing_merchant.reference }
+        let(:error_message) { 'Reference has already been taken' }
+
+        include_examples 'returns validation error', ActiveModel::StrictValidationFailed
+      end
+
       context 'when disbursement_frequency is not valid' do
         let(:disbursement_frequency) { 'monthly' }
         let(:error_message) { '\'monthly\' is not a valid disbursement_frequency' }
@@ -123,5 +131,5 @@ RSpec.describe Merchant do
     end
   end
 
-  # it { expect(described_class.reflect_on_association(:orders).macro).to eq(:has_many) }
+  it { expect(described_class.reflect_on_association(:orders).macro).to eq(:has_many) }
 end
