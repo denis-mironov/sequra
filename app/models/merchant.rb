@@ -8,19 +8,29 @@ class Merchant < ApplicationRecord
   #                   inverse_of: 'merchant'
 
   enum live_from_day: Date::DAYS_INTO_WEEK, _prefix: :live_from_day_is
-  enum disbursement_frequency: { daily: 0, weekly: 1 }, _default: :daily
+  enum disbursement_frequency: { daily: 0, weekly: 1 }, _default: :daily, _prefix: :disbursed
 
-  validates! :reference, :email, :live_from, :disbursement_frequency, presence: true
+  validates! :reference, :email, :live_from, presence: true
   validates! :email, uniqueness: { case_sensitive: false }, format: URI::MailTo::EMAIL_REGEXP
-  validate :live_from_day_for_weekly_disbursement
+
+  before_save :set_live_from_day_attribute, if: :disbursement_weekly?
+  before_save :remove_live_from_day_attribute, if: :disbursement_daily?
 
   private
 
-  def live_from_day_for_weekly_disbursement
-    return unless disbursement_frequency.to_s == 'weekly'
-    return if live_from_day.present?
+  def disbursement_weekly?
+    disbursement_frequency.to_s == 'weekly'
+  end
 
-    error_message = 'live_from_day can\'t be blank for \'weekly\' disbursement_frequency'
-    raise ActiveModel::StrictValidationFailed, error_message: error_message
+  def disbursement_daily?
+    disbursement_frequency.to_s == 'daily'
+  end
+
+  def set_live_from_day_attribute
+    self.live_from_day = live_from.strftime('%A').downcase
+  end
+
+  def remove_live_from_day_attribute
+    self.live_from_day = nil if live_from_day.present?
   end
 end
