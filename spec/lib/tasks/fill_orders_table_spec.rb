@@ -78,7 +78,7 @@ describe 'rake fill_table_with_data:orders', type: :task do
       let(:rows) do
         [
           %w[id merchant_reference amount created_at],
-          [uuid, reference + ' ', ' 25. 0', created_at]
+          [uuid, reference, ' 25. 0', created_at]
         ]
       end
 
