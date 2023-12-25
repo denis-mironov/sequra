@@ -35,6 +35,9 @@ Metrics/BlockLength:
 Lint/AmbiguousBlockAssociation:
   AllowedMethods: [change]
 
+Naming/VariableNumber:
+  EnforcedStyle: snake_case
+
 RSpec/ExampleLength:
   Max: 15
 
@@ -49,3 +52,6 @@ RSpec/HookArgument:
 
 RSpec/AnyInstance:
   Enabled: false
+
+RSpec/IndexedLet:
+  Max: 3
