@@ -38,6 +38,7 @@ describe 'rake fill_table_with_data:merchants', type: :task do
 
   subject(:execute_task) { Rake::Task['fill_table_with_data:merchants'].execute }
 
+  let(:fixtures_folder_path) { 'spec/fixtures' }
   let(:file_path) { 'spec/fixtures/merchants.csv' }
   let(:csv_file) { Rack::Test::UploadedFile.new(Rails.root.join(file_path), 'file/csv') }
   let(:created_records) { 1 }
@@ -63,6 +64,7 @@ describe 'rake fill_table_with_data:merchants', type: :task do
   end
 
   before do
+    FileUtils.mkdir_p(fixtures_folder_path)
     CSV.open(file_path, 'w') do |csv|
       rows.each { |row| csv << row }
     end
@@ -72,7 +74,7 @@ describe 'rake fill_table_with_data:merchants', type: :task do
     allow(Rails.root).to receive(:join).with('db/csv_dumps/merchants.csv').and_return(csv_file)
   end
 
-  after { FileUtils.rm_f(file_path) }
+  after { FileUtils.remove_dir(fixtures_folder_path) }
 
   context 'when all fields in .csv file are correct' do
     context 'when merchant with daily disbursement is created' do
