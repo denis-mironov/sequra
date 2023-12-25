@@ -44,10 +44,9 @@ module MerchantsHelper
     ->(field, field_info) { field_info.header == 'live_on' ? convert_to_date(field) : field }
   end
 
-  # converts 'live_on' field string from ['25-12-23', '25.12.23', '25,12,23', '25_12_23'] to '25/12/23'
-  # This is needed to create correct date based on the string.
+  # converts 'live_on' field string to Date format to save correctly in the DB.
   def convert_to_date(field)
-    Date.strptime(field.gsub(/[-.,_]/, '/'), '%d/%m/%y')
+    Date.strptime(field, '%m/%d/%Y')
   end
 
   def create_merchant(row, index)
@@ -56,7 +55,7 @@ module MerchantsHelper
       email: row['email'],
       live_from: row['live_on'],
       disbursement_frequency: row['disbursement_frequency']&.downcase,
-      minimum_monthly_fee: row['minimum_monthly_fee']
+      minimum_monthly_fee: row['minimum_monthly_fee']&.to_d
     )
 
     @created_records += 1

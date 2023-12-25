@@ -8,7 +8,7 @@ shared_examples 'creates valid merchant' do
       Merchant.where(
         reference: reference,
         email: email,
-        live_from: Date.strptime(live_on.gsub('.', '/'), '%d/%m/%y'),
+        live_from: Date.strptime(live_on, '%m/%d/%Y'),
         live_from_day: live_from_day,
         disbursement_frequency: disbursement_frequency.downcase,
         minimum_monthly_fee: minimum_monthly_fee.to_d
@@ -51,10 +51,10 @@ describe 'rake fill_table_with_data:merchants', type: :task do
   let(:uuid) { 'da66b997-2b0f-4899-8fc1-1d1da5e31c3b' }
   let(:reference) { 'rosenbaum_parisian' }
   let(:email) { 'info@rosenbaum-parisian.com' }
-  let(:live_on) { '25.12.23' }
+  let(:live_on) { '12/25/2023' }
   let(:live_from_day) { nil }
   let(:disbursement_frequency) { 'DAILY' }
-  let(:minimum_monthly_fee) { 15.0 }
+  let(:minimum_monthly_fee) { '15.0' }
 
   let(:rows) do
     [
@@ -84,7 +84,7 @@ describe 'rake fill_table_with_data:merchants', type: :task do
 
     context 'when merchant with weekly disbursement is created' do
       let(:disbursement_frequency) { 'WEEKLY' }
-      let(:live_from_day) { Date.strptime(live_on.gsub('.', '/'), '%d/%m/%y').strftime('%A').downcase } # 'monday'
+      let(:live_from_day) { Date.strptime(live_on, '%m/%d/%Y').strftime('%A').downcase } # 'monday'
 
       include_examples 'creates valid merchant'
       include_examples 'outputs start and finish messages'
@@ -94,7 +94,7 @@ describe 'rake fill_table_with_data:merchants', type: :task do
       let(:rows) do
         [
           %w[id reference email live_on disbursement_frequency minimum_monthly_fee],
-          [uuid, 'rosen baum_parisi an', 'info @rosenbaum-parisian. com', ' 25.12.23 ', 'DAILY ', minimum_monthly_fee]
+          [uuid, 'rosen baum_parisi an', 'info @rosenbaum-parisian. com', ' 12/25/2023 ', 'DAILY ', minimum_monthly_fee]
         ]
       end
 
@@ -117,7 +117,7 @@ describe 'rake fill_table_with_data:merchants', type: :task do
     end
 
     context 'when live_on field is incorrect' do
-      let(:live_on) { '123-12-23' }
+      let(:live_on) { '123/12/2023' }
       let(:error_message) { /Failed to create merchant/ }
       let(:validation_error_message) { /Error message: invalid date/ }
 
