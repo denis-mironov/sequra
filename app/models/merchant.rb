@@ -7,7 +7,7 @@ class Merchant < ApplicationRecord
   enum live_from_day: Date::DAYS_INTO_WEEK, _prefix: :live_from_day_is
   enum disbursement_frequency: { daily: 0, weekly: 1 }, _default: :daily, _prefix: :disbursed
 
-  validates! :reference, :email, :live_from, presence: true
+  validates! :reference, :email, :live_from, :disbursement_frequency, presence: true
   validates! :email, uniqueness: { case_sensitive: false }, format: URI::MailTo::EMAIL_REGEXP
   validates! :reference, uniqueness: { case_sensitive: true }
 

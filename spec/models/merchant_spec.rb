@@ -70,6 +70,13 @@ RSpec.describe Merchant do
         include_examples 'returns validation error', ActiveModel::StrictValidationFailed
       end
 
+      context 'when disbursement_frequency is absent' do
+        let(:disbursement_frequency) { nil }
+        let(:error_message) { 'Disbursement frequency can\'t be blank' }
+
+        include_examples 'returns validation error', ActiveModel::StrictValidationFailed
+      end
+
       context 'when email has wrong format' do
         let(:email) { 'invlid_email' }
         let(:error_message) { 'Email is invalid' }
