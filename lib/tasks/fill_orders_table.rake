@@ -12,12 +12,12 @@ namespace :fill_table_with_data do
     include OrdersHelper
 
     @created_records = 0
-    @creation_failed_records = 0
+    @failed_records = 0
+
+    puts 'Process started'
 
     # TODO: store files in cloud
     csv_file = Rails.root.join('db/csv_dumps/orders.csv')
-
-    puts 'Process started'
 
     CSV.foreach(
       csv_file,
@@ -25,9 +25,10 @@ namespace :fill_table_with_data do
       converters: [empty_space_converter, date_time_converter]
     ).with_index(1) { |row, index| create_order(row, index) }
   rescue StandardError => e
-    output_error_message(e)
+    puts 'Failed to create order'
+    puts "Error message: #{e.message}"
   ensure
-    puts "Process finished. Created records: #{@created_records}, creation failed records: #{@creation_failed_records}"
+    puts "Process finished. Created records: #{@created_records}, creation failed records: #{@failed_records}\n\n"
   end
 end
 
@@ -59,13 +60,9 @@ module OrdersHelper
 
     @created_records += 1
   rescue StandardError => e
-    output_error_message(e, index)
-  end
+    @failed_records += 1
 
-  def output_error_message(error, index = nil)
-    @creation_failed_records += 1
-
-    puts "Failed to create order. File row: #{index.present? ? index + 1 : nil}"
-    puts "Error message: #{error.message}\n\n"
+    puts "Failed to create order. File row: #{index + 1}"
+    puts "Error message: #{e.message}"
   end
 end

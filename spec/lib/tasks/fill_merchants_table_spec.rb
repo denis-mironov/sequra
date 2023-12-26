@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative '../../support/shared_examples/rake_tasks_execution'
 
 shared_examples 'creates valid merchant' do
   it 'creates valid merchant' do
@@ -15,22 +16,6 @@ shared_examples 'creates valid merchant' do
       ), :count
     ).by(1)
   end
-end
-
-shared_examples 'doesn\'t create merchant' do
-  it { expect { execute_task }.not_to change(Merchant, :count) }
-end
-
-shared_examples 'outputs start and finish messages' do
-  it { expect { execute_task }.to output(start_message).to_stdout }
-  it { expect { execute_task }.to output(finish_message).to_stdout }
-end
-
-shared_examples 'outputs start message, finish message and error messages' do
-  it { expect { execute_task }.to output(start_message).to_stdout }
-  it { expect { execute_task }.to output(error_message).to_stdout }
-  it { expect { execute_task }.to output(validation_error_message).to_stdout }
-  it { expect { execute_task }.to output(finish_message).to_stdout }
 end
 
 describe 'rake fill_table_with_data:merchants', type: :task do
@@ -118,6 +103,7 @@ describe 'rake fill_table_with_data:merchants', type: :task do
 
     context 'when live_on field is incorrect' do
       let(:live_on) { '123/12/2023' }
+      let(:failed_records) { 0 }
       let(:error_message) { /Failed to create merchant/ }
       let(:validation_error_message) { /Error message: invalid date/ }
 
@@ -156,5 +142,20 @@ describe 'rake fill_table_with_data:merchants', type: :task do
       include_examples 'doesn\'t create merchant'
       include_examples 'outputs start message, finish message and error messages'
     end
+  end
+
+  context 'when .csv file to parse doesn\'t exist' do
+    let(:created_records) { 0 }
+    let(:failed_records) { 0 }
+    let(:nonexistent_pathname) { '#<Pathname:/db/csv_dumps/non_existing.csv>' }
+    let(:error_message) { /Failed to create merchant/ }
+    let(:validation_error_message) { /Error message: No such file or directory/ }
+
+    before do
+      allow(Rails.root).to receive(:join).with('db/csv_dumps/merchants.csv').and_return(nonexistent_pathname)
+    end
+
+    include_examples 'doesn\'t create merchant'
+    include_examples 'outputs start message, finish message and error messages'
   end
 end
