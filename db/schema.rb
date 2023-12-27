@@ -17,7 +17,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_26_120846) do
 
   create_table "disbursements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "reference", null: false
-    t.decimal "total_net_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "gross_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "net_amount", precision: 10, scale: 2, default: "0.0", null: false
     t.decimal "total_fee", precision: 10, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

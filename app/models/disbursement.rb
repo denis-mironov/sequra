@@ -5,8 +5,9 @@
 class Disbursement < ApplicationRecord
   has_many :orders
 
-  validates! :reference, :total_net_amount, :total_fee, presence: true
+  validates! :reference, :gross_amount, :net_amount, :total_fee, presence: true
   validates! :reference, uniqueness: { case_sensitive: true }
-  validates! :total_net_amount, numericality: {}
+  validates! :gross_amount, numericality: {}
+  validates! :net_amount, numericality: {}
   validates! :total_fee, numericality: {}
 end

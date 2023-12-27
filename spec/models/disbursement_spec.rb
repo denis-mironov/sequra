@@ -7,21 +7,25 @@ RSpec.describe Disbursement do
 
   let(:reference) { 'store_reference_26_12_2023' }
   let(:total_fee) { 5.55 }
-  let(:total_net_amount) { 555.5 }
+  let(:net_amount) { 555.50 }
+  let(:gross_amount) { 561.05 }
   let(:attributes) do
     {
       reference: reference,
       total_fee: total_fee,
-      total_net_amount: total_net_amount
+      gross_amount: gross_amount,
+      net_amount: net_amount
     }
   end
 
   describe 'validations' do
     it { is_expected.to validate_presence_of(:reference).strict }
     it { is_expected.to validate_presence_of(:total_fee).strict }
-    it { is_expected.to validate_presence_of(:total_net_amount).strict }
+    it { is_expected.to validate_presence_of(:gross_amount).strict }
+    it { is_expected.to validate_presence_of(:net_amount).strict }
     it { is_expected.to validate_numericality_of(:total_fee).strict }
-    it { is_expected.to validate_numericality_of(:total_net_amount).strict }
+    it { is_expected.to validate_numericality_of(:gross_amount).strict }
+    it { is_expected.to validate_numericality_of(:net_amount).strict }
     it { is_expected.to validate_uniqueness_of(:reference).strict }
 
     context 'when all attributes are valid' do
@@ -29,7 +33,8 @@ RSpec.describe Disbursement do
       it { expect(create_disbursement).to be_valid }
       it { expect(create_disbursement.reference).to match(reference) }
       it { expect(create_disbursement.total_fee).to match(total_fee) }
-      it { expect(create_disbursement.total_net_amount).to match(total_net_amount) }
+      it { expect(create_disbursement.net_amount).to match(net_amount) }
+      it { expect(create_disbursement.gross_amount).to match(gross_amount) }
     end
   end
 

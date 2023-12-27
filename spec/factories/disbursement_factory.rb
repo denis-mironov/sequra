@@ -10,5 +10,5 @@ end
 
 def reference_name
   name = Faker::Company.unique.name.downcase.parameterize.underscore
-  name + '_' + Date.today.strftime('%d_%m_%Y')
+  "#{name}_#{Date.current.strftime('%d_%m_%Y')}"
 end
