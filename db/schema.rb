@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_24_160103) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_26_120846) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "disbursements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "reference", null: false
+    t.decimal "total_net_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "total_fee", precision: 10, scale: 2, default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reference"], name: "index_disbursements_on_reference", unique: true
+  end
 
   create_table "merchants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "reference", null: false
@@ -34,8 +43,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_24_160103) do
     t.string "reference", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "fee", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "net_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.uuid "disbursement_id"
+    t.index ["disbursement_id"], name: "index_orders_on_disbursement_id"
     t.index ["reference"], name: "index_orders_on_reference"
   end
 
+  add_foreign_key "orders", "disbursements"
   add_foreign_key "orders", "merchants", column: "reference", primary_key: "reference"
 end
