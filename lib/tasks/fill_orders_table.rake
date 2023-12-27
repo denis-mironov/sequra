@@ -53,7 +53,7 @@ module OrdersHelper
   def create_order(row, index)
     Order.create!(
       reference: row['merchant_reference'],
-      amount: row['amount']&.to_d,
+      amount: row['amount'],
       created_at: row['created_at'],
       updated_at: row['created_at']
     )
