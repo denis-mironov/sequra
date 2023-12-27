@@ -2,12 +2,6 @@
 
 require 'rails_helper'
 
-shared_examples 'returns validation error' do
-  it 'returns validation error' do
-    expect { create_order }.to raise_error(ActiveModel::StrictValidationFailed, error_message)
-  end
-end
-
 RSpec.describe Order do
   subject(:create_order) { described_class.create(attributes) }
 
@@ -21,7 +15,11 @@ RSpec.describe Order do
     }
   end
 
-  describe '.validates!' do
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:reference).strict }
+    it { is_expected.to validate_presence_of(:amount).strict }
+    it { is_expected.to validate_numericality_of(:amount).strict }
+
     context 'when all attributes are valid' do
       it { expect { create_order }.to change(described_class, :count).by(1) }
       it { expect(create_order).to be_valid }
@@ -30,38 +28,59 @@ RSpec.describe Order do
       it { expect(create_order.disbursed).to be_falsy }
 
       context 'when disbursed attribute is given' do
-        before do
-          attributes.merge!(disbursed: true)
-        end
+        before { attributes.merge!(disbursed: true) }
 
         it { expect(create_order.disbursed).to be_truthy }
       end
     end
 
-    context 'when attributes are not valid' do
-      context 'when reference is absent' do
-        let(:reference) { nil }
-        let(:error_message) { 'Reference can\'t be blank' }
+    context 'when valid merchant for an order doesn\'t exist' do
+      let(:reference) { 'invalid_reference' }
+      let(:error_message) { 'Validation failed: Merchant must exist' }
 
-        include_examples 'returns validation error'
-      end
-
-      context 'when amount is absent' do
-        let(:amount) { nil }
-        let(:error_message) { 'Amount can\'t be blank' }
-
-        include_examples 'returns validation error'
-      end
-
-      context 'when valid merchant for an order doesn\'t exist' do
-        let(:reference) { 'invalid_reference' }
-        let(:error_message) { 'Validation failed: Merchant must exist' }
-
-        it { expect { create_order }.not_to change(described_class, :count) }
-        it { expect(create_order).not_to be_valid }
-      end
+      it { expect { create_order }.not_to change(described_class, :count) }
+      it { expect(create_order).not_to be_valid }
     end
   end
 
-  it { expect(described_class.reflect_on_association(:merchant).macro).to eq(:belongs_to) }
+  describe 'callbacks' do
+    let(:first_category_fee) { (amount.to_f * Order::FIRST_CATEGORY_FEE / 100.0).round(2) }
+    let(:second_category_fee) { (amount.to_f * Order::SECOND_CATEGORY_FEE / 100.0).round(2) }
+    let(:third_category_fee) { (amount.to_f * Order::THIRD_CATEGORY_FEE / 100.0).round(2) }
+    let(:first_net_ammount) { (amount.to_f - first_category_fee.to_f).round(2) }
+    let(:second_net_ammount) { (amount.to_f - second_category_fee.to_f).round(2) }
+    let(:third_net_ammount) { (amount.to_f - third_category_fee.to_f).round(2) }
+
+    context 'when amount is less than 50' do
+      let(:amount) { 49.99 }
+
+      it { expect { create_order }.to change(described_class, :count).by(1) }
+      it { expect(create_order).to be_valid }
+      it { expect(create_order.fee).to match(first_category_fee) }
+      it { expect(create_order.net_amount).to match(first_net_ammount) }
+    end
+
+    context 'when amount is between 50 and 300' do
+      let(:amount) { 50.0 }
+
+      it { expect { create_order }.to change(described_class, :count).by(1) }
+      it { expect(create_order).to be_valid }
+      it { expect(create_order.fee).to match(second_category_fee) }
+      it { expect(create_order.net_amount).to match(second_net_ammount) }
+    end
+
+    context 'when amount is greater than 300' do
+      let(:amount) { 300.01 }
+
+      it { expect { create_order }.to change(described_class, :count).by(1) }
+      it { expect(create_order).to be_valid }
+      it { expect(create_order.fee).to match(third_category_fee) }
+      it { expect(create_order.net_amount).to match(third_net_ammount) }
+    end
+  end
+
+  describe 'associations' do
+    it { expect(described_class.reflect_on_association(:merchant).macro).to eq(:belongs_to) }
+    it { expect(described_class.reflect_on_association(:disbursement).macro).to eq(:belongs_to) }
+  end
 end
