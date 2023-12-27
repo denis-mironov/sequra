@@ -4,7 +4,7 @@ require 'rails_helper'
 
 shared_examples 'returns validation error' do |error|
   it 'returns validation error' do
-    expect { create_merchant }.to raise_error(error, error_message)
+    expect { subject }.to raise_error(error, error_message)
   end
 end
 
@@ -26,7 +26,15 @@ RSpec.describe Merchant do
     }
   end
 
-  describe '.validates!' do
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:reference).strict }
+    it { is_expected.to validate_presence_of(:email).strict }
+    it { is_expected.to validate_presence_of(:live_from).strict }
+    it { is_expected.to validate_presence_of(:disbursement_frequency).strict }
+    it { is_expected.to validate_uniqueness_of(:email).case_insensitive.strict }
+    it { is_expected.to allow_value('info@store-reference.com').for(:email).strict }
+    it { is_expected.not_to allow_value('store-reference.com').for(:email).strict }
+
     context 'when all attributes are valid' do
       it { expect { create_merchant }.to change(described_class, :count).by(1) }
       it { expect(create_merchant).to be_valid }
@@ -49,49 +57,6 @@ RSpec.describe Merchant do
     end
 
     context 'when attributes are not valid' do
-      context 'when reference is absent' do
-        let(:reference) { nil }
-        let(:error_message) { 'Reference can\'t be blank' }
-
-        include_examples 'returns validation error', ActiveModel::StrictValidationFailed
-      end
-
-      context 'when email is absent' do
-        let(:email) { nil }
-        let(:error_message) { 'Email can\'t be blank' }
-
-        include_examples 'returns validation error', ActiveModel::StrictValidationFailed
-      end
-
-      context 'when live_from is absent' do
-        let(:live_from) { nil }
-        let(:error_message) { 'Live from can\'t be blank' }
-
-        include_examples 'returns validation error', ActiveModel::StrictValidationFailed
-      end
-
-      context 'when disbursement_frequency is absent' do
-        let(:disbursement_frequency) { nil }
-        let(:error_message) { 'Disbursement frequency can\'t be blank' }
-
-        include_examples 'returns validation error', ActiveModel::StrictValidationFailed
-      end
-
-      context 'when email has wrong format' do
-        let(:email) { 'invlid_email' }
-        let(:error_message) { 'Email is invalid' }
-
-        include_examples 'returns validation error', ActiveModel::StrictValidationFailed
-      end
-
-      context 'when email is not unique' do
-        let(:existing_merchant) { create(:merchant) }
-        let(:email) { existing_merchant.email }
-        let(:error_message) { 'Email has already been taken' }
-
-        include_examples 'returns validation error', ActiveModel::StrictValidationFailed
-      end
-
       context 'when reference is not unique' do
         let(:existing_merchant) { create(:merchant) }
         let(:reference) { existing_merchant.reference }
@@ -120,7 +85,7 @@ RSpec.describe Merchant do
     end
   end
 
-  describe '.before_save' do
+  describe 'callbacks' do
     context 'when merchant is weekly disbursed' do
       let(:disbursement_frequency) { 'weekly' }
 
@@ -138,5 +103,7 @@ RSpec.describe Merchant do
     end
   end
 
-  it { expect(described_class.reflect_on_association(:orders).macro).to eq(:has_many) }
+  describe 'associations' do
+    it { is_expected.to have_many(:orders) }
+  end
 end
