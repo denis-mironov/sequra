@@ -265,6 +265,8 @@ GEM
     ruby2_keywords (0.0.5)
     rufus-scheduler (3.9.1)
       fugit (~> 1.1, >= 1.1.6)
+    shoulda-matchers (5.3.0)
+      activesupport (>= 5.2.0)
     sidekiq (7.2.0)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
@@ -313,6 +315,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rake
   rubocop-rspec
+  shoulda-matchers (~> 5.3)
   sidekiq (~> 7.2)
   sidekiq-scheduler (~> 5.0)
   spring

@@ -38,6 +38,9 @@ Lint/AmbiguousBlockAssociation:
 Naming/VariableNumber:
   EnforcedStyle: snake_case
 
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
 RSpec/ExampleLength:
   Max: 15
 
