@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Order do
-  subject(:create_order) { described_class.create(attributes) }
+  subject(:create_order) { described_class.create!(attributes) }
 
   let(:merchant) { create(:merchant) }
   let(:reference) { merchant.reference }
@@ -38,8 +38,9 @@ RSpec.describe Order do
       let(:reference) { 'invalid_reference' }
       let(:error_message) { 'Validation failed: Merchant must exist' }
 
-      it { expect { create_order }.not_to change(described_class, :count) }
-      it { expect(create_order).not_to be_valid }
+      it 'returns validation error' do
+        expect { create_order }.to raise_error(ActiveRecord::RecordInvalid, error_message)
+      end
     end
   end
 

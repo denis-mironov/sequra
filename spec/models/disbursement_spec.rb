@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Disbursement do
-  subject(:create_disbursement) { described_class.create(attributes) }
+  subject(:create_disbursement) { described_class.create!(attributes) }
 
   let(:reference) { 'store_reference_26_12_2023' }
   let(:total_fee) { 5.55 }

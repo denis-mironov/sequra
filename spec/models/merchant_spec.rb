@@ -9,7 +9,7 @@ shared_examples 'returns validation error' do |error|
 end
 
 RSpec.describe Merchant do
-  subject(:create_merchant) { described_class.create(attributes) }
+  subject(:create_merchant) { described_class.create!(attributes) }
 
   let(:reference) { 'store_reference' }
   let(:email) { 'info@store-reference.com' }
