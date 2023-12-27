@@ -19,11 +19,13 @@ namespace :fill_table_with_data do
     # TODO: store files in cloud
     csv_file = Rails.root.join('db/csv_dumps/merchants.csv')
 
-    CSV.foreach(
-      csv_file,
-      headers: true,
-      converters: [empty_space_converter, date_converter]
-    ).with_index(1) { |row, index| create_merchant(row, index) }
+    Merchant.transaction do
+      CSV.foreach(
+        csv_file,
+        headers: true,
+        converters: [empty_space_converter, date_converter]
+      ).with_index(1) { |row, index| create_merchant(row, index) }
+    end
   rescue StandardError => e
     puts 'Failed to create merchant'
     puts "Error message: #{e.message}"

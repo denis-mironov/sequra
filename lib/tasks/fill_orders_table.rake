@@ -19,11 +19,13 @@ namespace :fill_table_with_data do
     # TODO: store files in cloud
     csv_file = Rails.root.join('db/csv_dumps/orders.csv')
 
-    CSV.foreach(
-      csv_file,
-      headers: true,
-      converters: [empty_space_converter, date_time_converter]
-    ).with_index(1) { |row, index| create_order(row, index) }
+    Order.transaction do
+      CSV.foreach(
+        csv_file,
+        headers: true,
+        converters: [empty_space_converter, date_time_converter]
+      ).with_index(1) { |row, index| create_order(row, index) }
+    end
   rescue StandardError => e
     puts 'Failed to create order'
     puts "Error message: #{e.message}"
