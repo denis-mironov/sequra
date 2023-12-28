@@ -15,7 +15,7 @@ class Order < ApplicationRecord
   before_save :calculate_fee
   before_save :calculate_net_amount
 
-  scope :not_disbursed, -> { where(disbursed: false) }
+  scope :undisbursed, -> { where(disbursed: false) }
 
   private
 

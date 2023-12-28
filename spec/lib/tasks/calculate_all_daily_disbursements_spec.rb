@@ -50,26 +50,26 @@ describe 'rake all_disbursements:calculate_daily', type: :task do
   let(:order_date_4) { 2.days.ago }
 
   before do
-    create(:order, :not_disbursed, merchant: merchant_1, created_at: order_date_1.beginning_of_day)
-    create(:order, :not_disbursed, merchant: merchant_1, created_at: order_date_1.end_of_day)
-    create(:order, :not_disbursed, merchant: merchant_1, created_at: order_date_1)
-    create(:order, :not_disbursed, merchant: merchant_1, created_at: order_date_2)
-    create(:order, :not_disbursed, merchant: merchant_1, created_at: order_date_2.end_of_day)
+    create(:order, :undisbursed, merchant: merchant_1, created_at: order_date_1.beginning_of_day)
+    create(:order, :undisbursed, merchant: merchant_1, created_at: order_date_1.end_of_day)
+    create(:order, :undisbursed, merchant: merchant_1, created_at: order_date_1)
+    create(:order, :undisbursed, merchant: merchant_1, created_at: order_date_2)
+    create(:order, :undisbursed, merchant: merchant_1, created_at: order_date_2.end_of_day)
     create(:order, :disbursed, merchant: merchant_1, created_at: order_date_2)
 
-    create(:order, :not_disbursed, merchant: merchant_2, created_at: order_date_3.beginning_of_day)
-    create(:order, :not_disbursed, merchant: merchant_2, created_at: order_date_3.end_of_day - 9.hours)
-    create(:order, :not_disbursed, merchant: merchant_2, created_at: order_date_4)
-    create(:order, :not_disbursed, merchant: merchant_2, created_at: order_date_4.end_of_day - 5.hours)
+    create(:order, :undisbursed, merchant: merchant_2, created_at: order_date_3.beginning_of_day)
+    create(:order, :undisbursed, merchant: merchant_2, created_at: order_date_3.end_of_day - 9.hours)
+    create(:order, :undisbursed, merchant: merchant_2, created_at: order_date_4)
+    create(:order, :undisbursed, merchant: merchant_2, created_at: order_date_4.end_of_day - 5.hours)
     create(:order, :disbursed, merchant: merchant_2, created_at: order_date_4)
 
-    create(:order, :not_disbursed, merchant: merchant_3, created_at: order_date_1.beginning_of_day)
-    create(:order, :not_disbursed, merchant: merchant_3, created_at: order_date_1.end_of_day)
+    create(:order, :undisbursed, merchant: merchant_3, created_at: order_date_1.beginning_of_day)
+    create(:order, :undisbursed, merchant: merchant_3, created_at: order_date_1.end_of_day)
   end
 
   context 'when there are no errors during the task execution' do
     let(:start_message) { /Disbursement creation started for #{merchant.reference}/ }
-    let(:orders) { merchant.orders.not_disbursed.where('date(created_at) = ?', order_date) }
+    let(:orders) { merchant.orders.undisbursed.where('date(created_at) = ?', order_date) }
     let(:values) { orders.pluck('SUM(amount)', 'SUM(fee)', 'SUM(net_amount)').flatten }
     let(:reference) { "#{merchant.reference}_#{order_date.strftime('%d_%m_%Y')}" }
     let(:gross_amount) { values[0] }
@@ -119,8 +119,8 @@ describe 'rake all_disbursements:calculate_daily', type: :task do
 
   context 'when errors occur during the task execution' do
     let(:merchant_2) { create(:merchant, :disbursed_weekly) }
-    let(:order_date_1_orders) { merchant_1.orders.not_disbursed.where('date(created_at) = ?', order_date_1) }
-    let(:order_date_2_orders) { merchant_1.orders.not_disbursed.where('date(created_at) = ?', order_date_2) }
+    let(:order_date_1_orders) { merchant_1.orders.undisbursed.where('date(created_at) = ?', order_date_1) }
+    let(:order_date_2_orders) { merchant_1.orders.undisbursed.where('date(created_at) = ?', order_date_2) }
     let(:order_date_1_reference) { "#{merchant_1.reference}_#{order_date_1.strftime('%d_%m_%Y')}" }
     let(:order_date_2_reference) { "#{merchant_1.reference}_#{order_date_2.strftime('%d_%m_%Y')}" }
 

@@ -12,7 +12,7 @@ FactoryBot.define do
       disbursed { true }
     end
 
-    trait :not_disbursed do
+    trait :undisbursed do
       disbursed { false }
     end
   end
