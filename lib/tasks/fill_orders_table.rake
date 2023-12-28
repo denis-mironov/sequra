@@ -3,8 +3,7 @@
 require 'csv'
 
 # This task is needed to parse a .csv file and fill orders table.
-# Execute task with an argument:
-#   bash, zsh: rake fill_table_with_data:orders
+# Execute: rake fill_table_with_data:orders
 namespace :fill_table_with_data do
   desc 'Fills orders table'
 

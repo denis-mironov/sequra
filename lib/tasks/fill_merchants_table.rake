@@ -3,8 +3,7 @@
 require 'csv'
 
 # This task is needed to parse a .csv file with merchants and fill merchants table.
-# Execute task with an argument:
-#   bash, zsh: rake fill_table_with_data:merchants
+# Execute: rake fill_table_with_data:merchants
 namespace :fill_table_with_data do
   desc 'Fills merchants table'
 
