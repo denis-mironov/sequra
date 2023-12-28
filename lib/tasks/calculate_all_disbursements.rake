@@ -23,10 +23,10 @@ namespace :all_disbursements do
           one_day_total_values = calculate_total_values(one_day_orders)
 
           disbursement = create_disbursement(merchant_reference, date, one_day_total_values)
-          update_orders(one_day_orders, disbursement) if disbursement.valid?
+          update_orders(one_day_orders, disbursement) if disbursement&.valid?
         end
       rescue StandardError => e
-        "Failed to create disbursement for orders with date: #{date}. Error: #{e.message}"
+        puts "Error: #{e.message}"
       end
     end
   end
@@ -71,9 +71,6 @@ module DisbursementsHelper
   # rubocop:disable Rails/SkipsModelValidations
   def update_orders(orders, disbursement)
     orders.update_all(disbursed: true, disbursement_id: disbursement.id)
-  rescue StandardError
-    puts "Failed to update orders' disbursed value. Disbursement id: #{disbursement.id}"
-    raise
   end
   # rubocop:enable Rails/SkipsModelValidations
 end

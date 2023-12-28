@@ -3,6 +3,7 @@
 # 'merchants' table to store information about the seQura's merchant partners.
 class Merchant < ApplicationRecord
   has_many :orders, foreign_key: 'reference', primary_key: 'reference', dependent: :destroy, inverse_of: :merchant
+  has_many :disbursements, -> { distinct }, through: :orders
 
   enum live_from_day: Date::DAYS_INTO_WEEK, _prefix: :live_from_day_is
   enum disbursement_frequency: { daily: 0, weekly: 1 }, _default: :daily, _prefix: :disbursed

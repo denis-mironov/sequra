@@ -57,4 +57,4 @@ RSpec/AnyInstance:
   Enabled: false
 
 RSpec/IndexedLet:
-  Max: 3
+  Enabled: false
