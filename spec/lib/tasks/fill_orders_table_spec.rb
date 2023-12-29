@@ -15,7 +15,7 @@ shared_examples 'creates valid order' do
 end
 
 describe 'rake fill_table_with_data:orders', type: :task do
-  Rails.application.load_tasks
+  Rake::DefaultLoader.new.load('lib/tasks/fill_orders_table.rake')
 
   subject(:execute_task) { Rake::Task['fill_table_with_data:orders'].execute }
 

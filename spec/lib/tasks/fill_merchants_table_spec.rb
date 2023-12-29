@@ -19,7 +19,7 @@ shared_examples 'creates valid merchant' do
 end
 
 describe 'rake fill_table_with_data:merchants', type: :task do
-  Rails.application.load_tasks
+  Rake::DefaultLoader.new.load('lib/tasks/fill_merchants_table.rake')
 
   subject(:execute_task) { Rake::Task['fill_table_with_data:merchants'].execute }
 

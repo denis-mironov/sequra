@@ -1,42 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-
-shared_examples 'outputs calculation start message' do
-  it { expect { execute_task }.to output(start_message).to_stdout }
-end
-
-shared_examples 'creates disbursement' do
-  it 'creates disbursements' do
-    expect { execute_task }.to change(
-      Disbursement.where(
-        reference: reference,
-        gross_amount: gross_amount,
-        total_fee: total_fee,
-        net_amount: net_amount
-      ), :count
-    ).by(1)
-  end
-end
-
-shared_examples 'sets order\'s disbursed value to true' do
-  it 'sets orders disbursed value to true' do
-    execute_task
-
-    orders.each { |order| expect(order.disbursed).to be_truthy }
-  end
-end
-
-shared_examples 'sets disbursement_id for order' do
-  it 'sets disbursement_id for orders' do
-    execute_task
-
-    orders.each { |order| expect(order.disbursement_id).not_to be_nil }
-  end
-end
+require_relative '../../support/shared_examples/rake_tasks_execution'
 
 describe 'rake all_disbursements:calculate_daily', type: :task do
-  Rails.application.load_tasks
+  Rake::DefaultLoader.new.load('lib/tasks/calculate_daily_disbursements.rake')
 
   subject(:execute_task) { Rake::Task['all_disbursements:calculate_daily'].execute }
 
@@ -162,13 +130,13 @@ describe 'rake all_disbursements:calculate_daily', type: :task do
       it 'sets disbursed value to true for order_date_2_orders' do
         execute_task
 
-        order_date_2_orders.each { |order| expect(order.disbursed).to be_falsey }
+        order_date_2_orders.each { |order| expect(order.disbursed).to be_truthy }
       end
 
       it 'sets disbursement_id for order_date_2_orders' do
         execute_task
 
-        order_date_2_orders.each { |order| expect(order.disbursement_id).to be_nil }
+        order_date_2_orders.each { |order| expect(order.disbursement_id).not_to be_nil }
       end
     end
   end
