@@ -18,8 +18,9 @@ namespace :all_disbursements do
       merchant_disbursement_dates(merchant).each do |date|
         ActiveRecord::Base.transaction do
           one_week_orders = orders_created_within_a_week(merchant, date)
-          one_week_total_values = calculate_total_values(one_week_orders)
+          next if one_week_orders.empty?
 
+          one_week_total_values = calculate_total_values(one_week_orders)
           disbursement = create_disbursement(merchant_reference, date, one_week_total_values)
           update_orders(one_week_orders, disbursement) if disbursement&.valid?
         end
