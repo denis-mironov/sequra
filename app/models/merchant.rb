@@ -15,6 +15,14 @@ class Merchant < ApplicationRecord
   before_save :set_live_from_day_attribute, if: :disbursement_weekly?
   before_save :remove_live_from_day_attribute, if: :disbursement_daily?
 
+  def yesterday_undisbursed_orders
+    orders.undisbursed.where(created_at: Date.yesterday.all_day)
+  end
+
+  def last_week_undisbursed_orders
+    orders.undisbursed.where(created_at: week_disbursement_period)
+  end
+
   private
 
   def disbursement_weekly?
@@ -31,5 +39,11 @@ class Merchant < ApplicationRecord
 
   def remove_live_from_day_attribute
     self.live_from_day = nil if live_from_day.present?
+  end
+
+  # Ex: if disbursements are made weekly on Monday, then we consider all orders starting from
+  # the previous Monday (beginning of the day) until Sunday (end of the day)
+  def week_disbursement_period
+    (Date.current - 1.week).beginning_of_day..(Date.current - 1.day).end_of_day
   end
 end

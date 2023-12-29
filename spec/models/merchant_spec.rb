@@ -106,4 +106,40 @@ RSpec.describe Merchant do
   describe 'associations' do
     it { is_expected.to have_many(:orders) }
   end
+
+  describe '.yesterday_undisbursed_orders' do
+    let(:merchant) { create(:merchant) }
+    let!(:order_1) { create(:order, :undisbursed, merchant: merchant, created_at: Date.yesterday) }
+    let!(:order_2) { create(:order, :undisbursed, merchant: merchant, created_at: Date.yesterday.beginning_of_day) }
+    let!(:order_3) { create(:order, :undisbursed, merchant: merchant, created_at: Date.yesterday.end_of_day) }
+
+    before do
+      create(:order, :undisbursed, merchant: merchant, created_at: Date.current)
+      create(:order, :disbursed, merchant: merchant, created_at: Date.yesterday)
+    end
+
+    it 'returns only yesterday\'s undisbursed orders' do
+      expect(merchant.yesterday_undisbursed_orders.pluck(:id)).to match(
+        [order_1.id, order_2.id, order_3.id]
+      )
+    end
+  end
+
+  describe '.last_week_undisbursed_orders' do
+    let(:merchant) { create(:merchant, :disbursed_weekly) }
+    let!(:order_1) { create(:order, :undisbursed, merchant: merchant, created_at: 2.days.ago) }
+    let!(:order_2) { create(:order, :undisbursed, merchant: merchant, created_at: 1.day.ago) }
+    let!(:order_3) { create(:order, :undisbursed, merchant: merchant, created_at: 1.week.ago) }
+
+    before do
+      create(:order, :undisbursed, merchant: merchant, created_at: Date.current)
+      create(:order, :disbursed, merchant: merchant, created_at: 3.days.ago)
+    end
+
+    it 'returns only yesterday\'s undisbursed orders' do
+      expect(merchant.last_week_undisbursed_orders.pluck(:id)).to match(
+        [order_1.id, order_2.id, order_3.id]
+      )
+    end
+  end
 end
