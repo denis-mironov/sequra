@@ -1,0 +1,14 @@
+:queues:
+  - default
+
+:scheduler:
+  :schedule:
+    # every day at 4 AM
+    disbursement_calculation_for_daily_merchants:
+      cron: 0 4 * * *''
+      class: 'CalculateDailyDisbursementsWorker'
+
+    # every day at 4:30 AM
+    disbursement_calculation_for_weekly_merchants:
+      cron: 30 4 * * *''
+      class: 'CalculateWeeklyDisbursementsWorker'

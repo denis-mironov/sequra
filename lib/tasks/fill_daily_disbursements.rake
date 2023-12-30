@@ -5,11 +5,11 @@ require_relative 'helpers/disbursements_helper'
 require_relative '../../app/modules/order_util'
 
 # This task is needed for initial calculate of daily disbursements for all existing merchants
-# Execute: all_disbursements:calculate_daily
-namespace :all_disbursements do
+# Execute: disbursements:fill_daily
+namespace :disbursements do
   desc 'Calculate disbursements for daily merchants'
 
-  task calculate_daily: :environment do
+  task fill_daily: :environment do
     include DisbursementsHelper
     include OrderUtil
 

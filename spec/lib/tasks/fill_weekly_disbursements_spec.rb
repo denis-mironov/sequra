@@ -3,10 +3,10 @@
 require 'rails_helper'
 require_relative '../../support/shared_examples/rake_tasks_execution'
 
-describe 'rake all_disbursements:calculate_weekly', type: :task do
-  Rake::DefaultLoader.new.load('lib/tasks/calculate_weekly_disbursements.rake')
+describe 'rake disbursements:fill_weekly', type: :task do
+  Rake::DefaultLoader.new.load('lib/tasks/fill_weekly_disbursements.rake')
 
-  subject(:execute_task) { Rake::Task['all_disbursements:calculate_weekly'].execute }
+  subject(:execute_task) { Rake::Task['disbursements:fill_weekly'].execute }
 
   let(:merchant) { create(:merchant, :disbursed_weekly, live_from: 4.weeks.ago) }
   let(:merchant_daily) { create(:merchant, :disbursed_daily) }

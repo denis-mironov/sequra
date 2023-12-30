@@ -3,10 +3,10 @@
 require 'rails_helper'
 require_relative '../../support/shared_examples/rake_tasks_execution'
 
-describe 'rake all_disbursements:calculate_daily', type: :task do
-  Rake::DefaultLoader.new.load('lib/tasks/calculate_daily_disbursements.rake')
+describe 'rake disbursements:fill_daily', type: :task do
+  Rake::DefaultLoader.new.load('lib/tasks/fill_daily_disbursements.rake')
 
-  subject(:execute_task) { Rake::Task['all_disbursements:calculate_daily'].execute }
+  subject(:execute_task) { Rake::Task['disbursements:fill_daily'].execute }
 
   let(:merchant_1) { create(:merchant, :disbursed_daily) }
   let(:merchant_2) { create(:merchant, :disbursed_daily) }

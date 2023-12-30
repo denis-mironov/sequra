@@ -5,11 +5,11 @@ require_relative 'helpers/disbursements_helper'
 require_relative '../../app/modules/order_util'
 
 # This task is needed for initial calculate of weekly disbursements for all existing merchants
-# Execute: rake all_disbursements:calculate_weekly
-namespace :all_disbursements do
+# Execute: rake disbursements:fill_weekly
+namespace :disbursements do
   desc 'Calculate disbursements for weekly merchants'
 
-  task calculate_weekly: :environment do
+  task fill_weekly: :environment do
     include DisbursementsHelper
     include OrderUtil
 
