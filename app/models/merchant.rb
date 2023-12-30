@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# 'merchants' table to store information about the seQura's merchant partners.
+# 'merchants' table to store information about the seQura's merchant partners
 class Merchant < ApplicationRecord
   has_many :orders, foreign_key: 'reference', primary_key: 'reference', dependent: :destroy, inverse_of: :merchant
   has_many :disbursements, -> { distinct }, through: :orders

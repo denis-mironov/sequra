@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This service is needed to create disbursement. It returns disursement or raises an error
+# This service is needed to create disbursement. It returns disbursement or raises an error
 # Arguments:
 #   merchant: merchant
 #   date: date of disbursement

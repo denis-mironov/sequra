@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# 'orders' table to store information about the seQura's merchant partners' orders.
+# 'orders' table to store information about the seQura's merchant partners' orders
 class Order < ApplicationRecord
   FIRST_CATEGORY_FEE = 1.00
   SECOND_CATEGORY_FEE = 0.95

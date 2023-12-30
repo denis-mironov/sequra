@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# 'disbursements' table to store information about all the orders for a merchant
-# in a given day or week.
+# 'disbursements' table to store information about all orders of a merchant in a given day or week
 class Disbursement < ApplicationRecord
   has_many :orders
 

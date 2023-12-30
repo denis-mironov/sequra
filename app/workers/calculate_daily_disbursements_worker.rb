@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This worker is needed for daily disbursements calculation.
-# It's launched by sidekiq scheduler (config/sidekiq.yml) every day at 4am
+# It's launched by sidekiq scheduler (config/sidekiq.yml) every day at 4 AM
 class CalculateDailyDisbursementsWorker
   include Sidekiq::Worker
   include OrderUtil
