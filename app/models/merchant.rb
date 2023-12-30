@@ -20,7 +20,11 @@ class Merchant < ApplicationRecord
   end
 
   def last_week_undisbursed_orders
-    orders.undisbursed.where(created_at: week_disbursement_period)
+    orders.undisbursed.where(created_at: last_week)
+  end
+
+  def orders_created_within_a_week(period_of_time)
+    orders.undisbursed.where(created_at: period_of_time)
   end
 
   private
@@ -43,7 +47,7 @@ class Merchant < ApplicationRecord
 
   # Ex: if disbursements are made weekly on Monday, then we consider all orders starting from
   # the previous Monday (beginning of the day) until Sunday (end of the day)
-  def week_disbursement_period
+  def last_week
     (Date.current - 1.week).beginning_of_day..(Date.current - 1.day).end_of_day
   end
 end

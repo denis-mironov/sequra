@@ -2,6 +2,7 @@
 
 require 'csv'
 require_relative 'helpers/disbursements_helper'
+require_relative '../../app/modules/order_util'
 
 # This task is needed for initial calculate of weekly disbursements for all existing merchants
 # Execute: rake all_disbursements:calculate_weekly
@@ -10,6 +11,7 @@ namespace :all_disbursements do
 
   task calculate_weekly: :environment do
     include DisbursementsHelper
+    include OrderUtil
 
     Merchant.disbursed_weekly.each do |merchant|
       merchant_reference = merchant.reference
@@ -17,7 +19,7 @@ namespace :all_disbursements do
 
       merchant_disbursement_dates(merchant).each do |date|
         ActiveRecord::Base.transaction do
-          one_week_orders = orders_created_within_a_week(merchant, date)
+          one_week_orders = merchant.orders_created_within_a_week(disbursement_period(date))
           next if one_week_orders.empty?
 
           one_week_total_values = calculate_total_values(one_week_orders)

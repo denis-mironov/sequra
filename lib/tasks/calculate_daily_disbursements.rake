@@ -2,6 +2,7 @@
 
 require 'csv'
 require_relative 'helpers/disbursements_helper'
+require_relative '../../app/modules/order_util'
 
 # This task is needed for initial calculate of daily disbursements for all existing merchants
 # Execute: all_disbursements:calculate_daily
@@ -10,6 +11,7 @@ namespace :all_disbursements do
 
   task calculate_daily: :environment do
     include DisbursementsHelper
+    include OrderUtil
 
     Merchant.disbursed_daily.each do |merchant|
       merchant_reference = merchant.reference

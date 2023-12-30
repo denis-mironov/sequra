@@ -15,24 +15,10 @@ module DisbursementsHelper
       .excluding(live_from_date)
   end
 
-  def orders_created_within_a_week(merchant, date)
-    merchant.orders.undisbursed.where(created_at: disbursement_period(date))
-  end
-
   # Ex: if disbursements are made weekly on Monday, then we consider all orders starting from
   # the previous Monday (beginning of the day) until Sunday (end of the day)
   def disbursement_period(date)
     (date - 1.week).beginning_of_day..(date - 1.day).end_of_day
-  end
-
-  def calculate_total_values(orders)
-    values = orders.pluck('SUM(amount)', 'SUM(fee)', 'SUM(net_amount)').flatten
-
-    {
-      gross_amount: values[0],
-      total_fee: values[1],
-      net_amount: values[2]
-    }
   end
 
   # rubocop:disable Rails/Output
