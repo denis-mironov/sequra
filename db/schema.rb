@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_26_120846) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_31_112307) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -38,6 +38,17 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_26_120846) do
     t.index ["reference"], name: "index_merchants_on_reference", unique: true
   end
 
+  create_table "monthly_fees", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "merchant_id", null: false
+    t.decimal "total_fee", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "fee_to_charge", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "year", null: false
+    t.integer "month", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["merchant_id"], name: "index_monthly_fees_on_merchant_id"
+  end
+
   create_table "orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.boolean "disbursed", default: false, null: false
@@ -51,6 +62,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_26_120846) do
     t.index ["reference"], name: "index_orders_on_reference"
   end
 
+  add_foreign_key "monthly_fees", "merchants"
   add_foreign_key "orders", "disbursements"
   add_foreign_key "orders", "merchants", column: "reference", primary_key: "reference"
 end

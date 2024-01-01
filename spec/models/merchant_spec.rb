@@ -105,6 +105,7 @@ RSpec.describe Merchant do
 
   describe 'associations' do
     it { is_expected.to have_many(:orders) }
+    it { is_expected.to have_many(:monthly_fees) }
   end
 
   describe '.yesterday_undisbursed_orders' do

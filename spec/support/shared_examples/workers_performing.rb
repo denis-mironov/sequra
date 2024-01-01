@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples 'creates an instance of CreateDisbursementService' do
   it 'creates an instance of CreateDisbursementService' do
     perform_worker
