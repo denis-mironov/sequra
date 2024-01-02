@@ -20,7 +20,8 @@ Application uses:
   Due to the time constraints I was not able to finish:
   1. Dynamic monthly fee calculation at the beginning of each month and tests for this feature.
       - **possible solution**: create cron job that executes on the background via Sidekiq at the first day of each month (at night), checks all orders created within the last month, calculates total generated fee for each merchant and fee to be charged and saves all needed information in `monthly_fees` table. Provide tests for this feature.
-    
+  2. Some code refinements for better maintainability.
+
 ## Calculations
 **Note:** Monthly fee calculations for all merchants are calculated from `live on` date to current date (last calculated month is December 2023), even if there are no orders for December in `orders.csv` file!
 
@@ -30,14 +31,14 @@ Year	| Number of disbursements | Amount disbursed to merchants | Amount of order
 2023  | 7870                    | 143096726.46                  | 1300058.84           | 214                                                       | 4868.69                                            |
 
 
-		
+
 ## Files to download (DB dump, .CSV files)
 Dropbox link: https://www.dropbox.com/scl/fo/r3x8xnbbmbqnm6s2mujaa/h?rlkey=2x62x65vkbxy2aru05ui4c8iu&dl=0
 
-.CSV files provided via the original challenge are invalid. 
+.CSV files provided via the original challenge are invalid.
 
 ## Launch
-Before start working with the database, ensure you have the PostgreSQL service running: `brew services list` 
+Before start working with the database, ensure you have the PostgreSQL service running: `brew services list`
 
 1. `git clone git@github.com:denis-mironov/sequra.git`
 2. `bundle install`
@@ -58,7 +59,7 @@ Before start working with the database, ensure you have the PostgreSQL service r
       - `download 'development_dump.sql' file via Dropbox link above`
       - `psql sequra_development < link_to_downloaded_dump_file`
       - `rake db:migrate`
-     
+
 ## Check Sidekiq jobs execution
   1. Install and run Redis service ([official Redis documentation](https://redis.io/docs/install/install-redis/install-redis-on-mac-os/))
   2. Run Sidekiq server with `sidekiq` comand.
