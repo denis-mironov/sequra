@@ -13,7 +13,7 @@ namespace :disbursements do
     include DisbursementsHelper
     include OrderUtil
 
-    Merchant.disbursed_weekly.each do |merchant|
+    Merchant.disbursed_weekly.find_each do |merchant|
       merchant_reference = merchant.reference
       puts "Disbursement creation started for #{merchant_reference}. Disbursement day: #{merchant.live_from_day}"
 

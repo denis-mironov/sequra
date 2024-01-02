@@ -9,7 +9,7 @@ class CalculateWeeklyDisbursementsWorker
   sidekiq_options retry: false
 
   def perform
-    Merchant.disbursed_weekly.each do |merchant|
+    Merchant.disbursed_weekly.find_each do |merchant|
       orders = merchant.last_week_undisbursed_orders
       next if orders.empty?
 

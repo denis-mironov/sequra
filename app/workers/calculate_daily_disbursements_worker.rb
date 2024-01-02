@@ -9,7 +9,7 @@ class CalculateDailyDisbursementsWorker
   sidekiq_options retry: false
 
   def perform
-    Merchant.disbursed_daily.each do |merchant|
+    Merchant.disbursed_daily.find_each do |merchant|
       orders = merchant.yesterday_undisbursed_orders
       next if orders.empty?
 
