@@ -33,8 +33,7 @@ namespace :fill_table_with_data do
   end
 end
 
-# This module is needed to avoid using methods and constants with the same names in other tasks,
-# because methods inside the rake tasks are defined to the top level
+# helper module to provide clearance and maintanability of the code
 module OrdersHelper
   def empty_space_converter
     columns_to_convert = %w[merchant_reference amount]

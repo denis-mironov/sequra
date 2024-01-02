@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This helper module is needed for better structuring and maintainability of the rake task
+# helper module to provide clearance and maintanability of the code
 module DisbursementsHelper
   def merchant_order_dates(orders)
     orders.group('date(created_at)').count
