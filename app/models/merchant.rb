@@ -12,6 +12,7 @@ class Merchant < ApplicationRecord
   validates! :reference, :email, :live_from, :disbursement_frequency, presence: true
   validates! :email, uniqueness: { case_sensitive: false }, format: URI::MailTo::EMAIL_REGEXP
   validates! :reference, uniqueness: { case_sensitive: true }
+  validates! :disbursement_frequency, inclusion: { in: disbursement_frequencies.keys }
 
   before_save :set_live_from_day_attribute, if: :disbursement_weekly?
   before_save :remove_live_from_day_attribute, if: :disbursement_daily?

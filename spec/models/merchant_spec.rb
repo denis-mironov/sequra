@@ -35,6 +35,12 @@ RSpec.describe Merchant do
     it { is_expected.to allow_value('info@store-reference.com').for(:email).strict }
     it { is_expected.not_to allow_value('store-reference.com').for(:email).strict }
 
+    it 'validates inclusion of disbursement_frequency' do
+      described_class.disbursement_frequencies.each_key do |key|
+        expect(create_merchant).to allow_value(key).for(:disbursement_frequency).strict
+      end
+    end
+
     context 'when all attributes are valid' do
       it { expect { create_merchant }.to change(described_class, :count).by(1) }
       it { expect(create_merchant).to be_valid }
