@@ -1,4 +1,4 @@
-# seQura backend coding challenge
+# Backend coding challenge
 Ruby on Rails application that automates a calculation of merchants’ disbursements payouts and seQura commissions.
 Link to original challenge: https://sequra.github.io/backend-challenge/
 
@@ -16,12 +16,6 @@ Application uses:
   5. Calculate disbursements on daily basis
   6. Calculate disbursements on weekly basis
 
-## Features to do
-  Due to the time constraints I was not able to finish:
-  1. Dynamic monthly fee calculation at the beginning of each month and tests for this feature.
-      - **possible solution**: create cron job that executes on the background via Sidekiq at the first day of each month (at night), checks all orders created within the last month, calculates total generated fee for each merchant and fee to be charged and saves all needed information in `monthly_fees` table. Provide tests for this feature.
-  2. Some code refinements for better maintainability.
-
 ## Calculations
 **Note:** Monthly fee calculations for all merchants are calculated from `live on` date to current date (last calculated month is December 2023), even if there are no orders for December in `orders.csv` file!
 
@@ -29,7 +23,6 @@ Year	| Number of disbursements | Amount disbursed to merchants | Amount of order
 ------|-------------------------|-------------------------------|----------------------|-----------------------------------------------------------|----------------------------------------------------|
 2022  | 1009                    | 29035379.3                    | 262968.56            | 46                                                        | 1072.88                                            |
 2023  | 7870                    | 143096726.46                  | 1300058.84           | 214                                                       | 4868.69                                            |
-
 
 
 ## Files to download (DB dump, .CSV files)
@@ -67,10 +60,3 @@ Before start working with the database, ensure you have the PostgreSQL service r
  - `rspec spec`
 ## Run rubocop checks
  - `rubocop`
-## Problems during development process
-  1. .CSV files provided via the original challenge are invalid. They have correct file extension, but internal structure is invalid. before starting the challenge I converted them to correct .CSV format.
-  2. Some `amount` fields in `orders.csv` file are incorrect. I applied data converters and strict validations on models to avoid saving invalid data.
-
-<img width="414" alt="Screenshot 2023-12-27 at 10 24 38" src="https://github.com/denis-mironov/sequra/assets/13961302/a23bd32d-52ed-41ad-a11f-050fc6b8986b">
-
-![Screenshot 2023-12-27 at 10 45 04](https://github.com/denis-mironov/sequra/assets/13961302/8a51947a-09b2-4ab4-b457-39c938bfe0f9)
